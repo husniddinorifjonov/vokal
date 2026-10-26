@@ -5,6 +5,6 @@ Andijondagi ROYAL music school vokal kursi uchun bir sahifali sayt. Bitta `index
 - Tillar: UZ / RU (yuqori o'ngdagi tugma)
 - Qorong'i va yorug' rejim
 - Hero'da mikrofon orqali ovoz tahlili (HTTPS va mikrofon ruxsati kerak; bo'lmasa pianino varianti chiqadi)
-- Yozilish formalari `POST /api/lead` ga JSON yuboradi: `{name, phone, course, plan, source, lang}` — bu manzil serverda bo'lishi kerak (GitHub Pages'da forma ishlamaydi, telefon raqami ko'rsatiladi)
+- Yozilish formalari Google Apps Script web-ilovasiga (`LEAD_URL`, `/exec`) JSON yuboradi: `{name, phone, course, plan, form, lang, page}`. Skript arizani Telegram'dagi RoyalMusicBot'ga jo'natadi. Bot tokeni sahifada yo'q — u skriptning Script properties (`TG_TOKEN`) ichida turadi.
 
-Joylash: `index.html` ni istalgan statik hostingga qo'ying yoki GitHub Pages'ni yoqing (Settings → Pages → Deploy from a branch → main / root).
+Joylash: GitHub Pages (Settings → Pages → Deploy from a branch → main / root).
