@@ -1238,7 +1238,7 @@ document.querySelectorAll('.nav-links a').forEach(function(a){ a.addEventListene
 (function(){
   // Arizalar Google Apps Script orqali Telegram'ga boradi (integrations/telegram-apps-script).
   // Bu yerda faqat skriptning /exec manzili turadi; bot tokeni sahifada YO'Q.
-  var LEAD_URL = '';
+  var LEAD_URL = 'https://script.google.com/macros/s/AKfycbyNODST5byuMIdbhtoQH-HYRLrfJC2YsQU3qjbhFmqW9jlFP98ha4EtcUle9t1_pGhQjw/exec';
   var T = {
     uz:{ need:'Ism va telefon raqamini kiriting.', phone:"Telefon raqami +998 bilan, 9 ta raqam bo'lsin.", sending:'Yuborilmoqda...', ok:"Rahmat! Administrator tez orada qo'ng'iroq qiladi.", err:"Yuborilmadi. Iltimos, qo'ng'iroq qiling: +998 77 260 40 40", call:"Onlayn yozilish tez orada ishga tushadi. Hozircha qo'ng'iroq qiling — administrator sizni bepul sinov darsiga yozib qo'yadi:" },
     ru:{ need:'Введите имя и номер телефона.', phone:'Номер должен начинаться с +998 и содержать 9 цифр.', sending:'Отправка...', ok:'Спасибо! Администратор скоро перезвонит.', err:'Не отправилось. Пожалуйста, позвоните: +998 77 260 40 40', call:'Онлайн-запись скоро заработает. Пока позвоните — администратор запишет вас на бесплатный пробный урок:' }
