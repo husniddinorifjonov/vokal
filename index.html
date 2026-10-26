@@ -337,6 +337,9 @@ form.lead input,form.lead select{width:100%;padding:12px 14px;border:1px solid v
 form.lead input:focus,form.lead select:focus{border-color:var(--teal);outline:none}
 .form-msg{font-size:13px;color:var(--ink-soft);min-height:18px}
 .form-msg.ok{color:var(--ok)} .form-msg.err{color:var(--err)}
+.form-msg.call,.hero-msg.call{color:var(--ink);font-size:14px;line-height:1.5}
+.call-link{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-weight:600;color:var(--teal-deep);text-decoration:none;border-bottom:1.5px solid currentColor;white-space:nowrap}
+.call-link::before{content:"\260E";font-size:13px}
 
 /* FOOTER */
 footer{padding-block:56px 32px}
@@ -350,6 +353,7 @@ footer{padding-block:56px 32px}
 .foot .about{font-size:13px;color:var(--ink-soft);max-width:30ch;margin-top:14px}
 .copy{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--ink-faint)}
 
+.hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none}
 /* ===== MOBILE / RESPONSIVE ===== */
 .brand-short{display:none}
 .nav-links .m-only{display:none}
@@ -448,6 +452,7 @@ form.lead .btn,.hero-form .btn{white-space:normal;text-align:center;line-height:
       <h1><span data-uz="Kuylashni biz bilan o'rganing" data-ru="Научитесь петь вместе с нами">Kuylashni biz bilan o'rganing</span></h1>
       <p class="hero-desc" data-uz="ROYAL music school vokal kursi, Andijon. Nafas, intonatsiya, diksiya va sahna — individual darslarda. Birinchi darsdayoq sevimli qo'shig'ingizni kuylaysiz." data-ru="Курс вокала ROYAL music school, Андижан. Дыхание, интонация, дикция и сцена — на индивидуальных занятиях. Уже на первом уроке вы споёте любимую песню.">ROYAL music school vokal kursi, Andijon. Nafas, intonatsiya, diksiya va sahna — individual darslarda. Birinchi darsdayoq sevimli qo'shig'ingizni kuylaysiz.</p>
       <form class="hero-form" id="heroForm" novalidate>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input id="hName" name="name" type="text" autocomplete="name" data-ph-uz="Ismingiz" data-ph-ru="Ваше имя" placeholder="Ismingiz" aria-label="Ismingiz">
         <input id="hPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" aria-label="Telefon raqamingiz">
         <button type="submit" class="btn btn-primary" id="heroBtn"><span data-uz="Bepul sinov darsi" data-ru="Бесплатный пробный урок">Bepul sinov darsi</span><svg><use href="#i-arrow"/></svg></button>
@@ -795,6 +800,7 @@ form.lead .btn,.hero-form .btn{white-space:normal;text-align:center;line-height:
         </div>
       </div>
       <form class="lead" id="leadForm" novalidate>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label for="fName"><span data-uz="Ismingiz" data-ru="Ваше имя">Ismingiz</span>
           <input id="fName" name="name" type="text" autocomplete="name" required data-ph-uz="Masalan, Dilnoza" data-ph-ru="Например, Дильноза" placeholder="Masalan, Dilnoza">
         </label>
@@ -1230,38 +1236,52 @@ document.querySelectorAll('.nav-links a').forEach(function(a){ a.addEventListene
 
 /* ===== LEAD FORMS ===== */
 (function(){
-  // Lead server tomonga yuboriladi; Telegram tokenini sahifaga EMAS, /api/lead ichiga qo'ying.
-  var LEAD_ENDPOINT = '/api/lead';
+  // Arizalar Google Apps Script orqali Telegram'ga boradi (integrations/telegram-apps-script).
+  // Bu yerda faqat skriptning /exec manzili turadi; bot tokeni sahifada YO'Q.
+  var LEAD_URL = '';
   var T = {
-    uz:{ need:'Ism va telefon raqamini kiriting.', phone:"Telefon raqami +998 bilan, 9 ta raqam bo'lsin.", sending:'Yuborilmoqda...', ok:"Rahmat! Administrator tez orada qo'ng'iroq qiladi.", err:"Yuborilmadi. Iltimos, qo'ng'iroq qiling: +998 77 260 40 40" },
-    ru:{ need:'Введите имя и номер телефона.', phone:'Номер должен начинаться с +998 и содержать 9 цифр.', sending:'Отправка...', ok:'Спасибо! Администратор скоро перезвонит.', err:'Не отправилось. Пожалуйста, позвоните: +998 77 260 40 40' }
+    uz:{ need:'Ism va telefon raqamini kiriting.', phone:"Telefon raqami +998 bilan, 9 ta raqam bo'lsin.", sending:'Yuborilmoqda...', ok:"Rahmat! Administrator tez orada qo'ng'iroq qiladi.", err:"Yuborilmadi. Iltimos, qo'ng'iroq qiling: +998 77 260 40 40", call:"Onlayn yozilish tez orada ishga tushadi. Hozircha qo'ng'iroq qiling — administrator sizni bepul sinov darsiga yozib qo'yadi:" },
+    ru:{ need:'Введите имя и номер телефона.', phone:'Номер должен начинаться с +998 и содержать 9 цифр.', sending:'Отправка...', ok:'Спасибо! Администратор скоро перезвонит.', err:'Не отправилось. Пожалуйста, позвоните: +998 77 260 40 40', call:'Онлайн-запись скоро заработает. Пока позвоните — администратор запишет вас на бесплатный пробный урок:' }
   };
   function normPhone(v){ return v.replace(/[^\d+]/g,''); }
   async function send(payload){
+    if (!LEAD_URL) return false;
     try {
-      var res = await fetch(LEAD_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-      return res.ok;
+      // text/plain — "oddiy" so'rov: Apps Script CORS preflight'ni qo'llamaydi.
+      var res = await fetch(LEAD_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload) });
+      if (!res.ok) return false;
+      var data = await res.json().catch(function(){ return null; });
+      return !!(data && data.ok);
     } catch(err){ return false; }
   }
-  function wire(form, msg, btn, needName){
+  function wire(form, msg, btn, needName, formName){
     form.addEventListener('submit', async function(e){
       e.preventDefault();
       var t = T[currentLang];
+      msg.className = msg.className.replace(/\b(ok|err|call)\b/g,'').trim();
+      if (!LEAD_URL){
+        // Telegram hali ulanmagan: arizani yo'qotmaslik uchun telefon raqamini ko'rsatamiz.
+        msg.innerHTML = '';
+        msg.appendChild(document.createTextNode(t.call + ' '));
+        var a = document.createElement('a'); a.href = 'tel:+998772604040'; a.className = 'call-link'; a.textContent = '+998 77 260 40 40';
+        msg.appendChild(a); msg.classList.add('call');
+        return;
+      }
       var name = needName ? form.name.value.trim() : '';
       var phone = normPhone(form.phone.value), plan = form.plan ? form.plan.value : '';
-      msg.className = msg.className.replace(/\b(ok|err)\b/g,'').trim();
       if ((needName && !name) || !phone){ msg.textContent = t.need; msg.classList.add('err'); return; }
       if (!/^(\+?998)?\d{9}$/.test(phone)){ msg.textContent = t.phone; msg.classList.add('err'); return; }
       if (!phone.startsWith('+')) phone = '+' + (phone.startsWith('998') ? phone : '998' + phone);
       var label = btn.innerHTML; btn.textContent = t.sending; btn.disabled = true;
-      var ok = await send({ name:name || '—', phone:phone, course:'Vokal', plan:plan, source:'landing-vokal', lang:currentLang });
+      var ok = await send({ name:name || '—', phone:phone, course:'Vokal', plan:plan, form:formName, lang:currentLang,
+        page:location.href.split('#')[0], website: form.website ? form.website.value : '' });
       btn.disabled = false; btn.innerHTML = label;
       if (ok){ msg.textContent = t.ok; msg.classList.add('ok'); form.reset(); }
       else { msg.textContent = t.err; msg.classList.add('err'); }
     });
   }
-  wire(document.getElementById('leadForm'), document.getElementById('formMsg'), document.getElementById('submitBtn'), true);
-  wire(document.getElementById('heroForm'), document.getElementById('heroMsg'), document.getElementById('heroBtn'), true);
+  wire(document.getElementById('leadForm'), document.getElementById('formMsg'), document.getElementById('submitBtn'), true, 'bottom');
+  wire(document.getElementById('heroForm'), document.getElementById('heroMsg'), document.getElementById('heroBtn'), true, 'hero');
 })();
 </script>
 
