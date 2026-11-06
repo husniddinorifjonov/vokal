@@ -1,10 +1,7 @@
-# ROYAL music school — Vokal kursi lendingi
+# ROYAL music school — Vokal kursi (eski manzil)
 
-Andijondagi ROYAL music school vokal kursi uchun bir sahifali sayt. Bitta `index.html` fayl: CSS, JS va rasmlar ichida, tashqi bog'liqlik faqat Google Fonts (Inter).
+Bu repo `https://royal-art.uz/vokal/` manzilini (avvalgi `husniddinorifjonov.github.io/vokal/`) saqlab turadi. `index.html` tashrif buyuruvchini asosiy saytdagi yangi vokal sahifasiga yo'naltiradi: https://royal-art.uz/royal-vokal.html. Manzildagi `?utm_source=…` kabi parametrlar saqlanadi.
 
-- Tillar: UZ / RU (yuqori o'ngdagi tugma)
-- Qorong'i va yorug' rejim
-- Hero'da mikrofon orqali ovoz tahlili (HTTPS va mikrofon ruxsati kerak; bo'lmasa pianino varianti chiqadi)
-- Yozilish formalari Google Apps Script web-ilovasiga (`LEAD_URL`, `/exec`) JSON yuboradi: `{name, phone, course, plan, form, lang, page}`. Skript arizani Telegram'dagi RoyalMusicBot'ga jo'natadi. Bot tokeni sahifada yo'q — u skriptning Script properties (`TG_TOKEN`) ichida turadi.
+Vokal sahifasining o'zi asosiy sayt repo'sida (`husniddinorifjonov/husniddinorifjonov.github.io`) turadi va `deploy-site.py` bilan yangilanadi. Bu yerga to'liq sahifa nusxasini qo'ymang: ikki nusxa bo'lib, biri eskirib qoladi.
 
 Joylash: GitHub Pages (Settings → Pages → Deploy from a branch → main / root).
